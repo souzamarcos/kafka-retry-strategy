@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: kafka-retry
+
+  cloud:
+    function:
+      definition: transactionConsumer;transactionRetryConsumer;
+      ineligible-definitions: sendToDlqAndContinue
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      binders:
+        kafka-default:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: localhost:9092
+      bindings:
+        transactionConsumer-in-0:
+          binder: kafka-default
+          destination: transaction-topic
+          group: "${spring.application.name}"
+          consumer:
+            concurrency: 1
+
+        transactionRetryConsumer-in-0:
+          binder: kafka-default
+          destination: transaction-retry-topic
+          group: "${spring.application.name}"
+          consumer:
+            concurrency: 1
+
+        transactionConsumer-out-0:
+          binder: kafka-default
+          destination: transaction-topic
+
+        transactionRetryConsumer-out-0:
+          binder: kafka-default
+          destination: transaction-retry-topic
+
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    path:
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: bindings
