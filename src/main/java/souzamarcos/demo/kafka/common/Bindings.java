@@ -22,7 +22,7 @@ public enum Bindings {
     public static LocalDateTime getLastPausedDateTime(Bindings binding) {
         return lastPausedDateTime.get(binding);
     }
-    public static void updateLastPausedDateTime(Bindings binding) {
-        lastPausedDateTime.put(binding, LocalDateTime.now());
+    public static void updateLastPausedDateTime(Bindings binding, LocalDateTime dateTime) {
+        lastPausedDateTime.put(binding, dateTime);
     }
 }

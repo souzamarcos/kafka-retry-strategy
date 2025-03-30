@@ -31,6 +31,7 @@ public class TransactionRetryConsumer implements Consumer<Message<TransactionMes
 
         if (shouldPauseBinding(message)) {
             pauseBinding();
+            throw new RuntimeException("Pausing binding");
         }
     }
 
@@ -45,7 +46,7 @@ public class TransactionRetryConsumer implements Consumer<Message<TransactionMes
     private void pauseBinding() {
 
         bindingsLifecycleController.changeState(TRANSACTION_RETRY_IN.getBindingName(), BindingsLifecycleController.State.PAUSED);
-        Bindings.updateLastPausedDateTime(TRANSACTION_RETRY_IN);
+        Bindings.updateLastPausedDateTime(TRANSACTION_RETRY_IN, LocalDateTime.now());
         log.warn("Pausing binding: {}", TRANSACTION_RETRY_IN.getBindingName());
     }
 }

@@ -34,6 +34,8 @@ spring:
           group: "${spring.application.name}"
           consumer:
             concurrency: 1
+            configuration:
+              max.poll.records: 1
 
         transactionConsumer-out-0:
           binder: kafka-default

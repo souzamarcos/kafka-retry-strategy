@@ -10,6 +10,7 @@ import souzamarcos.demo.kafka.common.Bindings;
 
 import java.time.LocalDateTime;
 
+import static souzamarcos.demo.kafka.common.Bindings.TRANSACTION_RETRY_IN;
 import static souzamarcos.demo.kafka.consumers.TransactionRetryConsumer.DELAY_TIME_IN_MINUTES;
 
 @Slf4j
@@ -28,16 +29,15 @@ public class ResumeRetryBindingTask {
     }
 
     private Boolean shouldResumeBinding() {
-        var lastPausedDateTime = Bindings.getLastPausedDateTime(Bindings.TRANSACTION_RETRY_IN);
-        return lastPausedDateTime != null && Bindings.getLastPausedDateTime(Bindings.TRANSACTION_RETRY_IN)
+        var lastPausedDateTime = Bindings.getLastPausedDateTime(TRANSACTION_RETRY_IN);
+        return lastPausedDateTime != null && lastPausedDateTime
             .plusMinutes(DELAY_TIME_IN_MINUTES)
             .isBefore(LocalDateTime.now());
     }
 
     private void resumeBinding() {
-        ## See why not startint binding
-        bindingsLifecycleController.changeState(Bindings.TRANSACTION_IN.getBindingName(), BindingsLifecycleController.State.STARTED);
-        log.info("Resuming binding: {}", Bindings.TRANSACTION_IN.getBindingName());
-        Bindings.updateLastPausedDateTime(null);
+        bindingsLifecycleController.changeState(TRANSACTION_RETRY_IN.getBindingName(), BindingsLifecycleController.State.RESUMED);
+        log.info("Resuming binding: {}", TRANSACTION_RETRY_IN.getBindingName());
+        Bindings.updateLastPausedDateTime(TRANSACTION_RETRY_IN, null);
     }
 }
