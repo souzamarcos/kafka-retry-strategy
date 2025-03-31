@@ -47,7 +47,7 @@ public class TransactionRetryConsumer implements Consumer<Message<TransactionMes
 
 
     private Boolean shouldPauseBinding(Message<TransactionMessage> message) {
-        var retryCreatedAt = getRetryCreatedAt(message);
+        var retryCreatedAt = getReceivedTimestamp(message);
 
         return retryCreatedAt
                 .plusSeconds(DELAY_TIME_IN_SECONDS)
