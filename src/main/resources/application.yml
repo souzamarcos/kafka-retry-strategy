@@ -1,7 +1,6 @@
 spring:
   application:
     name: kafka-retry
-
   cloud:
     function:
       definition: transactionConsumer;transactionRetryConsumer;
@@ -33,9 +32,9 @@ spring:
           destination: transaction-retry-topic
           group: "${spring.application.name}"
           consumer:
-            concurrency: 1
             configuration:
-              max.poll.records: 1
+              auto.offset.reset: earliest  # Não perder mensagens ao reiniciar
+              max.poll.records: 1  # Consumir até 10 mensagens por polling
 
         transactionConsumer-out-0:
           binder: kafka-default
@@ -50,8 +49,8 @@ springdoc:
     operationsSorter: method
     path:
 
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: bindings
+
+logging:
+  level:
+    org.apache.kafka: DEBUG
+    org.springframework.kafka: DEBUG

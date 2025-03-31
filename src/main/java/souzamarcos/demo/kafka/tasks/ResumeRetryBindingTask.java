@@ -11,7 +11,7 @@ import souzamarcos.demo.kafka.common.Bindings;
 import java.time.LocalDateTime;
 
 import static souzamarcos.demo.kafka.common.Bindings.TRANSACTION_RETRY_IN;
-import static souzamarcos.demo.kafka.consumers.TransactionRetryConsumer.DELAY_TIME_IN_MINUTES;
+import static souzamarcos.demo.kafka.consumers.TransactionRetryConsumer.DELAY_TIME_IN_SECONDS;
 
 @Slf4j
 @AllArgsConstructor
@@ -22,7 +22,6 @@ public class ResumeRetryBindingTask {
 
     @Scheduled(fixedRate = 5000)
     public void scheduleFixedRateTask() {
-        log.info("Running ResumeRetryBindingTask");
         if (shouldResumeBinding()) {
             resumeBinding();
         }
@@ -31,13 +30,13 @@ public class ResumeRetryBindingTask {
     private Boolean shouldResumeBinding() {
         var lastPausedDateTime = Bindings.getLastPausedDateTime(TRANSACTION_RETRY_IN);
         return lastPausedDateTime != null && lastPausedDateTime
-            .plusMinutes(DELAY_TIME_IN_MINUTES)
+            .plusSeconds(DELAY_TIME_IN_SECONDS)
             .isBefore(LocalDateTime.now());
     }
 
     private void resumeBinding() {
-        bindingsLifecycleController.changeState(TRANSACTION_RETRY_IN.getBindingName(), BindingsLifecycleController.State.RESUMED);
-        log.info("Resuming binding: {}", TRANSACTION_RETRY_IN.getBindingName());
         Bindings.updateLastPausedDateTime(TRANSACTION_RETRY_IN, null);
+        bindingsLifecycleController.changeState(TRANSACTION_RETRY_IN.getBindingName(), BindingsLifecycleController.State.STARTED);
+        log.info("Resuming binding: {}", TRANSACTION_RETRY_IN.getBindingName());
     }
 }

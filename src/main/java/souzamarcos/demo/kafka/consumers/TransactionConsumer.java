@@ -10,6 +10,8 @@ import souzamarcos.demo.kafka.dto.TransactionMessage;
 
 import java.util.function.Consumer;
 
+import static souzamarcos.demo.kafka.utils.MessageUtils.generateRetryMessage;
+
 
 @Slf4j
 @AllArgsConstructor
@@ -31,11 +33,11 @@ public class TransactionConsumer implements Consumer<Message<TransactionMessage>
 
 
     private boolean shouldRetry(Message<TransactionMessage> message) {
-        return message.getPayload().value() == 1;
+        return message.getPayload().value() >= 0;
     }
 
 
     private void sendToRetry(Message<TransactionMessage> message) {
-        streamBridge.send(Bindings.TRANSACTION_RETRY_OUTPUT.getBindingName(), message);
+        streamBridge.send(Bindings.TRANSACTION_RETRY_OUTPUT.getBindingName(), generateRetryMessage(message));
     }
 }
