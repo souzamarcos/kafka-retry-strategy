@@ -32,6 +32,7 @@ spring:
           destination: transaction-retry-topic
           group: "${spring.application.name}"
           consumer:
+            concurrency: 1
             configuration:
               auto.offset.reset: earliest  # Não perder mensagens ao reiniciar
               max.poll.records: 1  # Consumir até 10 mensagens por polling
@@ -50,7 +51,7 @@ springdoc:
     path:
 
 
-logging:
-  level:
-    org.apache.kafka: DEBUG
-    org.springframework.kafka: DEBUG
+#logging:
+#  level:
+#    org.apache.kafka: DEBUG
+#    org.springframework.kafka: DEBUG
