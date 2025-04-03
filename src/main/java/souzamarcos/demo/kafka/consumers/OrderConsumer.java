@@ -16,7 +16,7 @@ import static souzamarcos.demo.kafka.utils.MessageUtils.generateRetryMessage;
 @Slf4j
 @AllArgsConstructor
 @Component
-public class TransactionConsumer implements Consumer<Message<TransactionMessage>> {
+public class OrderConsumer implements Consumer<Message<TransactionMessage>> {
 
     private StreamBridge streamBridge;
 

@@ -11,7 +11,7 @@ import souzamarcos.demo.kafka.common.Bindings;
 import java.time.LocalDateTime;
 
 import static souzamarcos.demo.kafka.common.Bindings.TRANSACTION_RETRY_IN;
-import static souzamarcos.demo.kafka.consumers.TransactionRetryConsumer.DELAY_TIME_IN_SECONDS;
+import static souzamarcos.demo.kafka.consumers.RetryConsumer.DELAY_TIME_IN_SECONDS;
 
 @Slf4j
 @AllArgsConstructor

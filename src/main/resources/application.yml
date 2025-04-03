@@ -3,7 +3,7 @@ spring:
     name: kafka-retry
   cloud:
     function:
-      definition: transactionConsumer;transactionRetryConsumer;
+      definition: transactionConsumer;orderConsumer;retryConsumer;
       ineligible-definitions: sendToDlqAndContinue
     stream:
       kafka:
@@ -27,9 +27,16 @@ spring:
           consumer:
             concurrency: 1
 
-        transactionRetryConsumer-in-0:
+        orderConsumer-in-0:
           binder: kafka-default
-          destination: transaction-retry-topic
+          destination: order-topic
+          group: "${spring.application.name}"
+          consumer:
+            concurrency: 1
+
+        retryConsumer-in-0:
+          binder: kafka-default
+          destination: retry-topic
           group: "${spring.application.name}"
           consumer:
             concurrency: 1
@@ -41,9 +48,13 @@ spring:
           binder: kafka-default
           destination: transaction-topic
 
-        transactionRetryConsumer-out-0:
+        orderConsumer-out-0:
           binder: kafka-default
-          destination: transaction-retry-topic
+          destination: order-topic
+
+        retryConsumer-out-0:
+          binder: kafka-default
+          destination: retry-topic
 
 springdoc:
   swagger-ui:

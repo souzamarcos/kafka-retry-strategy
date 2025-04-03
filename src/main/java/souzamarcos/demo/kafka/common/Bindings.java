@@ -10,10 +10,10 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public enum Bindings {
-    TRANSACTION_IN("transactionConsumer-in-0"),
     TRANSACTION_OUTPUT("transactionConsumer-out-0"),
-    TRANSACTION_RETRY_IN("transactionRetryConsumer-in-0"),
-    TRANSACTION_RETRY_OUTPUT("transactionRetryConsumer-out-0");
+    ORDER_OUTPUT("orderConsumer-out-0"),
+    TRANSACTION_RETRY_IN("retryConsumer-in-0"),
+    TRANSACTION_RETRY_OUTPUT("retryConsumer-out-0");
 
     private final String bindingName;
 
