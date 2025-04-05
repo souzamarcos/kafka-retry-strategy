@@ -1,10 +1,29 @@
 # kafka-retry-strategy
-Kafka Retry Strategy with multiple topics and DLT
+Generic Kafka async retry strategy with multiple topic origins, delayed retry configuration and DLT
 
+## Dependencies
+- Java 17+
+- Gradle
+- Docker
+- Docker Compose
+- Spring Boot
+- Spring Cloud Stream Kafka
+
+## Strategy
+The strategy is to use a combination of Kafka topics and a retry mechanism to handle message processing failures. 
+The application will consume messages from a source topic, process them, and if processing fails, it will retry the operation a specified number of times with a delay before sending the message to a Dead Letter Topic (DLT).
+
+![architecture](docs/kafka_retry_architecture.png)
 
 ## Run Application
 
-Execute the following command to run the application:
+Execute the following command to run the kafka containers:
+
+```bash
+docker-compose up
+```
+
+Run the application:
 
 ```bash
 ./gradlew run
