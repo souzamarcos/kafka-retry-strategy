@@ -12,8 +12,8 @@ import java.util.Map;
 public enum Bindings {
     TRANSACTION_OUTPUT("transactionConsumer-out-0"),
     ORDER_OUTPUT("orderConsumer-out-0"),
-    TRANSACTION_RETRY_IN("retryConsumer-in-0"),
-    TRANSACTION_RETRY_OUTPUT("retryConsumer-out-0");
+    RETRY_IN("retryConsumer-in-0"),
+    RETRY_OUTPUT("retryConsumer-out-0");
 
     private final String bindingName;
 

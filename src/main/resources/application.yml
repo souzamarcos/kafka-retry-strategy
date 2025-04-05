@@ -9,6 +9,32 @@ spring:
       kafka:
         binder:
           brokers: localhost:9092
+          auto-create-topics: true
+        bindings:
+          retryConsumer-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: retry-dlt
+              concurrency: 1
+              configuration:
+                auto.offset.reset: earliest  # Não perder mensagens ao reiniciar
+                max.poll.records: 1  # Consumir até 10 mensagens por polling
+
+          transactionConsumer-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: retry
+              configuration:
+                auto.offset.reset: earliest  # Não perder mensagens ao reiniciar
+                max.poll.records: 1  # Consumir até 10 mensagens por polling
+          orderConsumer-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: retry
+              configuration:
+                auto.offset.reset: earliest  # Não perder mensagens ao reiniciar
+                max.poll.records: 1  # Consumir até 10 mensagens por polling
+
       binders:
         kafka-default:
           type: kafka
@@ -22,39 +48,42 @@ spring:
       bindings:
         transactionConsumer-in-0:
           binder: kafka-default
-          destination: transaction-topic
+          destination: transaction
           group: "${spring.application.name}"
           consumer:
             concurrency: 1
+            maxAttempts: 1
 
         orderConsumer-in-0:
           binder: kafka-default
-          destination: order-topic
+          destination: order
           group: "${spring.application.name}"
           consumer:
             concurrency: 1
+            maxAttempts: 1
 
         retryConsumer-in-0:
           binder: kafka-default
-          destination: retry-topic
+          destination: retry
           group: "${spring.application.name}"
           consumer:
-            concurrency: 1
-            configuration:
-              auto.offset.reset: earliest  # Não perder mensagens ao reiniciar
-              max.poll.records: 1  # Consumir até 10 mensagens por polling
+            concurrency: 10
+            maxAttempts: 2
+            retryableExceptions:
+              souzamarcos.demo.core.exception.PauseBindingException: true
+              souzamarcos.demo.core.exception.ReachedMaxRetriesException: false
 
         transactionConsumer-out-0:
           binder: kafka-default
-          destination: transaction-topic
+          destination: transaction
 
         orderConsumer-out-0:
           binder: kafka-default
-          destination: order-topic
+          destination: order
 
         retryConsumer-out-0:
           binder: kafka-default
-          destination: retry-topic
+          destination: retry
 
 springdoc:
   swagger-ui:
